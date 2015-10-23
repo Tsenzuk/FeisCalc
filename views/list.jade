@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  dl.dl-horizontal
+    for val, key in data
+        if((val != undefined)&&(typeof val!= "function"))
+            if((typeof val == "object")&&(val.name))
+                dt!= val.name
+                dd
+                    dl.dl-horizontal
+                        for objVal, objKey in val
+                            if(typeof objVal != "function")
+                                dt!= objKey
+                                dd!= objVal
+            else
+                dt!= key
+                dd!= val
+                
