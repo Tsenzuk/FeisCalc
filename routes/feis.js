@@ -1,4 +1,5 @@
 var express = require('express');
+var Feis = require('feis');
 var router = express.Router();
 
 var feises = [];
@@ -95,7 +96,7 @@ module.exports = router;
  * @param name {String}
  * @constructor
  **/
-function Feis (name){
+/*function Feis (name){
     this.super.apply(this);
     
     this.name = name;
@@ -116,14 +117,14 @@ Feis.prototype.super = Identity;
  *
  * @constructor
  **/
-function Identity(){
+/*function Identity(){
     return this;
 }
 /**
  *
  * @param obj {Object}
  **/
-Identity.prototype.update = function(obj){
+/*Identity.prototype.update = function(obj){
     var that = this;
     Object.keys(this).forEach(function(key){
         if(obj.hasOwnProperty(key)){
@@ -132,4 +133,4 @@ Identity.prototype.update = function(obj){
             }
         }
     })
-}
+}*/
