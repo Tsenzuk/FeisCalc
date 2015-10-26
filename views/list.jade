@@ -1,18 +1,136 @@
 extends layout
 
 block content
-  dl.dl-horizontal
-    for val, key in data
-        if((val != undefined)&&(typeof val!= "function"))
+  - var listbox = false;
+  .panel.panel-default
+    .panel-heading!= title||"record list"
+    ul.list-group
+      if(model)
+        li.list-group-item
+          button.edit-record.btn.btn-default
+            i.glyphicon.glyphicon-plus
+            span  add item
+          .modal.fade
+              .modal-dialog
+                .modal-content
+                  .modal-header
+                    button.close(type="button", data-dismiss="modal", aria-label="Close")
+                      span(aria-hidden="true") &times;
+                    h4.modal-title Add record
+                  form.modal-body.form-horizontal(method="POST", action="./")
+                    for objVal, objKey in model                        
+                        case typeof objVal
+                          when "string"
+                            .form-group
+                              label.col-sm-2.control-label!= objKey
+                              .col-sm-10
+                                input.form-control(type="text", name!=objKey)
+                          when "boolean"
+                            .form-group
+                                label.col-sm-2.control-label!= objKey
+                                .col-sm-10
+                                  input.form-control(type="checkbox", name!=objKey)
+                          when "number"
+                            .form-group
+                                label.col-sm-2.control-label!= objKey
+                                .col-sm-10
+                                  input.form-control(type="number", name!=objKey)
+                          when "object"
+                            if(objVal instanceof Date)
+                              .form-group
+                                label.col-sm-2.control-label!= objKey
+                                .col-sm-10
+                                  input.form-control(type="date", name!=objKey)
+                    .form-group
+                      button(type="submit").btn.btn-success.col-sm-2.col-sm-offset-2
+                        i.glyphicon.glyphicon-ok
+                        span  OK
+                      button(data-dismiss="modal").btn.btn-danger.col-sm-2.col-sm-offset-1
+                        i.glyphicon.glyphicon-remove
+                        span  Cancel
+        for val, key in data
+          if((val != undefined)&&(typeof val!= "function"))
             if((typeof val == "object")&&(val.name))
-                dt!= val.name
-                dd
-                    dl.dl-horizontal
-                        for objVal, objKey in val
-                            if(typeof objVal != "function")
-                                dt!= objKey
-                                dd!= objVal
-            else
-                dt!= key
-                dd!= val
+              - listbox=true
+              li.list-group-item
+                a(href="./" + key + "/")!= val.name + (val.lastName?(" " + val.lastName):"")
+                button.edit-record.btn.btn-xs.btn-default.pull-right
+                  i.glyphicon.glyphicon-pencil
+                .modal.fade
+                  .modal-dialog
+                    .modal-content
+                      .modal-header
+                        button.close(type="button", data-dismiss="modal", aria-label="Close")
+                          span(aria-hidden="true") &times;
+                        h4.modal-title Edit record
+                      form.modal-body.form-horizontal(method="PUT", action="./" + key + "/")
+                        for objVal, objKey in val                        
+                            case typeof objVal
+                              when "string"
+                                .form-group
+                                  label.col-sm-2.control-label!= objKey
+                                  .col-sm-10
+                                    input.form-control(type="text" value!=objVal, name!=objKey)
+                              when "boolean"
+                                .form-group
+                                    label.col-sm-2.control-label!= objKey
+                                    .col-sm-10
+                                      input.form-control(type="checkbox" checked!=objVal, name!=objKey)
+                              when "number"
+                                .form-group
+                                    label.col-sm-2.control-label!= objKey
+                                    .col-sm-10
+                                      input.form-control(type="number" value!=objVal, name!=objKey)
+                              when "object"
+                                if(objVal instanceof Date)
+                                  .form-group
+                                    label.col-sm-2.control-label!= objKey
+                                    .col-sm-10
+                                      -var dateString = objVal.getFullYear() + "-" + (objVal.getMonth()+1) + "-" + objVal.getDate()
+                                      input.form-control(type="date" value!=dateString, name!=objKey)
+                        .form-group
+                          button(type="submit").btn.btn-success.col-sm-2.col-sm-offset-2
+                            i.glyphicon.glyphicon-ok
+                            span  OK
+                          button(data-dismiss="modal").btn.btn-danger.col-sm-2.col-sm-offset-1
+                            i.glyphicon.glyphicon-remove
+                            span  Cancel
+                          button.delete.btn.btn-danger.col-sm-2.col-sm-offset-2
+                            i.glyphicon.glyphicon-trash
+                            span  Remove
+      else
+        li.list-group-item
+          form.modal-body.form-horizontal(method="PUT")
+            for objVal, objKey in data                        
+                case typeof objVal
+                  when "string"
+                    .form-group
+                      label.col-sm-2.control-label!= objKey
+                      .col-sm-10
+                        input.form-control(type="text" value!=objVal, name!=objKey)
+                  when "boolean"
+                    .form-group
+                        label.col-sm-2.control-label!= objKey
+                        .col-sm-10
+                          input.form-control(type="checkbox" checked!=objVal, name!=objKey)
+                  when "number"
+                    .form-group
+                        label.col-sm-2.control-label!= objKey
+                        .col-sm-10
+                          input.form-control(type="number" value!=objVal, name!=objKey)
+                  when "object"
+                    if(objVal instanceof Date)
+                      .form-group
+                        label.col-sm-2.control-label!= objKey
+                        .col-sm-10
+                          -var dateString = objVal.getFullYear() + "-" + (objVal.getMonth()+1) + "-" + objVal.getDate()
+                          input.form-control(type="date" value!=dateString, name!=objKey)
+                    else
+                      .form-group
+                        label.col-sm-2.control-label
+                          a(href="./"+objKey + "/")!= objKey
+            .form-group
+              button(type="submit").btn.btn-success.col-sm-2.col-sm-offset-2
+                i.glyphicon.glyphicon-ok
+                span  OK
                 
