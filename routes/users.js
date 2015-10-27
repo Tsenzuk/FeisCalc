@@ -18,7 +18,7 @@ router.get('/', function (req, res, next) {
     res.locals.title = "Persons list";
     next();
 }).post('/', function (req, res, next) {
-    var user = new Person("Jane " + (new Date()));
+    var user = new Person("Jane " + (new Date()).getTime());
     user.update(req.body);
     var id = req.app.get("locals").users.push(user);
     res.locals.data = user;

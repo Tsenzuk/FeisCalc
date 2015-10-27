@@ -100,7 +100,7 @@ block content
                             span  Remove
       else
         li.list-group-item
-          form.modal-body.form-horizontal(method="PUT")
+          form.modal-body.form-horizontal(method="PUT", action="./")
             for objVal, objKey in data                        
                 case typeof objVal
                   when "string"
@@ -133,4 +133,7 @@ block content
               button(type="submit").btn.btn-success.col-sm-2.col-sm-offset-2
                 i.glyphicon.glyphicon-ok
                 span  OK
+              button.delete.btn.btn-danger.col-sm-2.col-sm-offset-2
+                i.glyphicon.glyphicon-trash
+                span  Remove
                 

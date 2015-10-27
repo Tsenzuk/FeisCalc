@@ -12,9 +12,10 @@ jQuery(function ($) {
             method:method,
             url:path,
             data:formData,
-            success:function(){}
+            success:function(){
+                window.location.reload();
+            }
         });
-        window.location.reload();
         return false;
     }).find(".delete").click(function(){
         var $this = $(this).closest("form");
@@ -23,9 +24,10 @@ jQuery(function ($) {
         $.ajax({
             method:method,
             url:path,
-            success:function(){}
+            success:function(){
+                window.location.reload();
+            }
         });
-        window.location.reload();
         return false;
     })
 })

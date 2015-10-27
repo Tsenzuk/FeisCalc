@@ -1,95 +1,114 @@
 var express = require('express');
 var Feis = require('../models/feis');
 var Person = require('../models/person');
-//var sqlite3 = require("sqlite3");
-var router = express.Router();
-//var db = new sqlite3.Database(':memory:');
 
-/*db.serialize(function () {
-    db.run("CREATE TABLE Feises (ID INTEGER, name TEXT, date DATE, address TEXT, description TEXT)");
-});*/
-router.use(function(req, res, next){
+var router = express.Router();
+
+router.use(function (req, res, next) {
     res.locals.model = new Feis();
     next();
 });
 
 /* GET feises page. */
 router.get('/', function (req, res, next) {
-    res.locals.data = res.app.get("locals").feises;
-    res.locals.title = "Feises list";
-    next();
-    /*db.all("SELECT * From Feises", function (err,feises) {
-        if(err){
-            res.status(500).send(err);
+    res.app.get("locals").db.feises.get(null, function (err, data) {
+        if (err) {
+            res.locals.error = {
+                message: "",
+                error: err,
+                code: 500
+            };
+            next();
             return;
         }
-        res.locals.data = feises;
+        res.locals.data = data
+        res.locals.title = "Feises list";
         next();
-    });*/
+    });
 }).post('/', function (req, res, next) {
-    var feis = new Feis("Auto name for Feis " + (new Date()));
-    feis.update(req.body);
-    var id = req.app.get("locals").feises.push(feis);
-    res.locals.data = feis;
-    res.locals.title = "Feis " + id;
-    res.locals.id = id;
-    next();
-}).delete('/', function (req, res, next) {
-    req.app.get("locals").feises.length = 0;
-    res.locals.data = req.app.get("locals").feises;
-    res.locals.title = "Feises list";
-    next();
+    res.app.get("locals").db.feises.set(req.body, function (err, data) {
+        res.locals.data = data;
+        res.locals.title = "Feis " + data.id;
+        res.locals.id = data.id;
+        next();
+    });
 });
 
 router.param('id', function (req, res, next, id) {
-    var errors = {
-        "404": {
-            message: "Feis with id '" + id + "' not found",
-            error: {}
-        }
-    }
     res.locals.title = "Feis " + req.params.id;
     res.locals.id = id;
     delete res.locals.model;
-    if (isNaN(id)) {
-        req.app.get("locals").feises.forEach(function (feis, index, array) {
-            if (feis.name == id) {
-                res.locals.feis = req.app.get("locals").feises[index];
-                next();
-                return true;
-            } else if (index == (array.length - 1)) {
-                res.status(404).render("error", errors["404"]);
-            }
-        })
-    } else if (id) {
-        if (req.app.get("locals").feises[id]) {
-            res.locals.feis = req.app.get("locals").feises[id];
-            next();
-        } else {
-            res.status(404).render("error", errors["404"]);
-        }
-    } else {
-        res.status(404).render("error", errors["404"]);
-    }
+    next();
 });
 
 /* GET one fies page. */
 router.get('/:id', function (req, res, next) {
-    res.locals.data = res.locals.feis;
-    next();
+    res.app.get("locals").db.feises.get(res.locals.id, function (err, data) {
+        if (err) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: err,
+                code: 500
+            }
+            next();
+            return;
+        } else if (!data) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: {
+                    status: "Not found"
+                },
+                code: 404
+            };
+            next();
+            return;
+        }
+        res.locals.data = new Feis(data);
+        res.locals.title = "Feis " + res.locals.id;
+        res.locals.id = res.locals.id;
+        req.body.id = res.locals.id;
+        next();
+    })
 }).put('/:id', function (req, res, next) {
-    res.locals.feis.update(req.body);
-    res.locals.data = res.locals.feis;
-    next();
+    res.app.get("locals").db.feises.set(req.body, res.locals.id, function (err, data) {
+        if (err) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: err,
+                code: 500
+            };
+            next();
+            return;
+        }
+        res.locals.data = data;
+        res.locals.title = "Feis " + res.locals.id;
+        res.locals.id = res.locals.id;
+        next();
+    });
 }).delete('/:id', function (req, res, next) {
-    req.app.get("locals").feises[req.app.get("locals").feises.indexOf(res.locals.feis)] = undefined;
-    res.locals.data = req.app.get("locals").feises;
-    res.locals.title = "Feises list";
-    next();
+    res.app.get("locals").db.feises.del(res.locals.id, function (err) {
+        if (err) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: err,
+                code: 500
+            };
+            next();
+            return;
+        }
+        res.locals.error = {
+            message: "Feis with id " + res.locals.id,
+            error: {
+                status: "Is deleted"
+            },
+            code: 200
+        };
+        next();
+    })
 });
 
 /* GET one fies page. */
-router.use('/:id/participants', function (req, res, next) {
+/*router.use('/:id/participants', function (req, res, next) {
     res.locals.model = new Person();
     next();
 }).get('/:id/participants', function (req, res, next) {
@@ -97,7 +116,7 @@ router.use('/:id/participants', function (req, res, next) {
     res.locals.title = "Participants list";
     next();
 }).post('/:id/participants', function (req, res, next) {
-    var user = new Person("Auto name for Feis " + (new Date()));
+    var user = new Person("Auto name for Feis " + (new Date()).getTime());
     user.update(req.body);
     var id = res.locals.feis.participants.push(user);
     res.locals.data = user;
@@ -109,9 +128,13 @@ router.use('/:id/participants', function (req, res, next) {
     res.locals.data = res.locals.feis.participants;
     res.locals.title = "Participants list";
     next();
-});
+});*/
 
 router.use(function (req, res, next) {
+    if (res.locals.error) {
+        res.status(res.locals.error.code).render("error", res.locals.error);
+        return;
+    }
     res.format({
         'text/plain': function () {
             res.render('list', {

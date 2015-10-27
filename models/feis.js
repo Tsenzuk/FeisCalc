@@ -10,12 +10,18 @@ var Identity = require("./identity")
 function Feis(name) {
     this.super.apply(this);
 
-    this.name = name;
+    this.name = "name";
     this.date = new Date();
     this.address = "";
     this.description = "";
     this.participants = [];
     this.judges = [];
+
+    if (typeof name == "string") {
+        this.name = name;
+    } else if (typeof name == "object") {
+        this.update(name)
+    }
     return this;
 }
 Feis.prototype = Object.create(Identity.prototype);

@@ -23,5 +23,19 @@ Identity.prototype.update = function (obj) {
         }
     });
 };
+/**
+ *
+ **/
+Identity.prototype.sql = function (obj) {
+    var that = this;
+    var str = "";
+    if(!obj){
+        obj = this;
+    }
+    Object.keys(obj).forEach(function (key) {
+        str = str + key + "='" + obj[key] + "' ";
+    });
+    return str;
+};
 
 module.exports = Identity;
