@@ -10,9 +10,10 @@ var Identity = require("./identity")
 function Person(name) {
     this.super.apply(this);
 
-    this.name = name;
+    //this.id = null;
+    this.name = "";
     this.lastName = "";
-    this.birth = new Date();
+    this.date = new Date();
     this.school = "";
     this.city = "";
     this.male = false;
@@ -28,11 +29,18 @@ function Person(name) {
         set: 0
     };
     this.password = "";
+    
+    if (typeof name == "string") {
+        this.name = name;
+    } else if (typeof name == "object") {
+        this.update(name)
+    }
+    
     return this;
 }
 Person.prototype = Object.create(Identity.prototype);
 Person.prototype.constructor = Person;
 Person.prototype.super = Identity;
-Person.prototype.levels = ["beginner","primary","intermediate","open"];
+/*Person.prototype.levels = ["beginner","primary","intermediate","open"];*/
 
 module.exports = Person;

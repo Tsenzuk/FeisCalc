@@ -1,6 +1,6 @@
 var express = require('express');
 var Feis = require('../models/feis');
-var Person = require('../models/person');
+var Person = require('../models/user');
 
 var router = express.Router();
 
@@ -28,7 +28,7 @@ router.get('/', function (req, res, next) {
 }).post('/', function (req, res, next) {
     res.app.get("locals").db.feises.set(req.body, function (err, data) {
         res.locals.data = data;
-        res.locals.title = "Feis " + data.id;
+        res.locals.title = "Feis " + data.id; //TODO: return id with model
         res.locals.id = data.id;
         next();
     });
@@ -43,7 +43,7 @@ router.param('id', function (req, res, next, id) {
 
 /* GET one fies page. */
 router.get('/:id', function (req, res, next) {
-    res.app.get("locals").db.feises.get(res.locals.id, function (err, data) {
+    res.app.get("locals").db.feises.get(res.locals.id, function (err, feis) {
         if (err) {
             res.locals.error = {
                 message: "Feis with id " + res.locals.id,
@@ -52,7 +52,7 @@ router.get('/:id', function (req, res, next) {
             }
             next();
             return;
-        } else if (!data) {
+        } else if (!feis) {
             res.locals.error = {
                 message: "Feis with id " + res.locals.id,
                 error: {
@@ -63,14 +63,14 @@ router.get('/:id', function (req, res, next) {
             next();
             return;
         }
-        res.locals.data = new Feis(data);
+        res.locals.data = feis;
         res.locals.title = "Feis " + res.locals.id;
-        res.locals.id = res.locals.id;
+        //res.locals.id = res.locals.id;
         req.body.id = res.locals.id;
         next();
     })
 }).put('/:id', function (req, res, next) {
-    res.app.get("locals").db.feises.set(req.body, res.locals.id, function (err, data) {
+    res.app.get("locals").db.feises.set(req.body, res.locals.id, function (err, feis) {
         if (err) {
             res.locals.error = {
                 message: "Feis with id " + res.locals.id,
@@ -80,9 +80,9 @@ router.get('/:id', function (req, res, next) {
             next();
             return;
         }
-        res.locals.data = data;
+        res.locals.data = feis;
         res.locals.title = "Feis " + res.locals.id;
-        res.locals.id = res.locals.id;
+        //res.locals.id = res.locals.id;
         next();
     });
 }).delete('/:id', function (req, res, next) {

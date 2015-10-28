@@ -10,6 +10,7 @@ var Identity = require("./identity")
 function Feis(name) {
     this.super.apply(this);
 
+    //this.id = null;
     this.name = "name";
     this.date = new Date();
     this.address = "";
