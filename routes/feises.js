@@ -108,31 +108,93 @@ router.get('/:id', function (req, res, next) {
 });
 
 /* GET one fies page. */
-/*router.use('/:id/participants', function (req, res, next) {
+router.use('/:id/participants', function (req, res, next) {
     res.locals.model = new Person();
     next();
 }).get('/:id/participants', function (req, res, next) {
-    res.locals.data = res.locals.feis.participants;
-    res.locals.title = "Participants list";
-    next();
+    res.app.get("locals").db.participants.get(res.locals.id, function (err, users) {
+        if (err) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: err,
+                code: 500
+            }
+            next();
+            return;
+        } else if (!users) {
+            res.locals.error = {
+                message: "Feis with id " + res.locals.id,
+                error: {
+                    status: "Not found"
+                },
+                code: 404
+            };
+            next();
+            return;
+        }
+        res.locals.data = users;
+        res.locals.title = "Feis " + res.locals.id + " participants";
+        //res.locals.id = res.locals.id;
+        req.body.id = res.locals.id;
+        next();
+    })
 }).post('/:id/participants', function (req, res, next) {
-    var user = new Person("Auto name for Feis " + (new Date()).getTime());
+	res.app.get("locals").db.participants.set(res.locals.id, req.body.id, function (err, user) {
+		res.locals.data = user;
+		next();
+	});
+    /*var user = new Person("Auto name for Feis " + (new Date()).getTime());
     user.update(req.body);
     var id = res.locals.feis.participants.push(user);
     res.locals.data = user;
     res.locals.title = "User " + id;
     res.locals.id = id;
-    next();
+    next();*/
 }).delete('/:id/participants', function (req, res, next) {
-    res.locals.feis.participants.length = 0;
-    res.locals.data = res.locals.feis.participants;
-    res.locals.title = "Participants list";
-    next();
-});*/
+	res.app.get("locals").db.participants.del(req.body.id, function (err, user) {
+		if (err) {
+            res.locals.error = {
+                message: "Participant with id " + res.body.id,
+                error: err,
+                code: 500
+            };
+            next();
+            return;
+        }
+		res.locals.error = {
+            message: "Participant with id " + res.body.id,
+            error: {
+                status: "Is deleted"
+            },
+            code: 200
+        };
+		next();
+	});
+}).delete('/:id/participants/:participant_id', function (req, res, next) {
+	res.app.get("locals").db.participants.del(req.params.participant_id, function (err, user) {
+		if (err) {
+            res.locals.error = {
+                message: "Participant with id " + res.params.participant_id,
+                error: err,
+                code: 500
+            };
+            next();
+            return;
+        }
+		res.locals.error = {
+            message: "Participant with id " + res.params.participant_id,
+            error: {
+                status: "Is deleted"
+            },
+            code: 200
+        };
+		next();
+	});
+});
 
 router.use(function (req, res, next) {
     if (res.locals.error) {
-        res.status(res.locals.error.code).render("error", res.locals.error);
+        res.status(res.locals.error.code||500).render("error", res.locals.error);
         return;
     }
     res.format({

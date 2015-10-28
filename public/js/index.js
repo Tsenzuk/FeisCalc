@@ -1,33 +1,31 @@
 jQuery(function ($) {
-    $(".edit-record").click(function () {
-        var $this = $(this);
-        $this.parent().find(".modal").modal("show");
+    var Roots = {
+        fesiList: $("#fc-feises")
+    }
+    var feises = [];
+
+    function feisesList() {
+        Roots.fesiList.find("option").not(".default").remove();
+        feises.forEach(function (f, id) {
+            if (f) {
+                Roots.fesiList.append($("<option></option>").val(id).text(f.name).data("feis", f));
+            }
+        })
+    }
+
+    Roots.fesiList.change(function () {
+        var leftPanel = $(".tab-pane.active").find(".left-panel");
+        var feis = Roots.fesiList.find("option:selected").data("feis");
+        $.getJSON("/feises/" + Roots.fesiList.val() + "/participants", function (ret) {
+            feis.participants = ret;
+            leftPanel.find(".list-group").html("").append(feis.participants.map(function (p) {
+                return ((p) ? $("<li></li>").addClass("list-group-item").text(p.name + " " + p.lastName) : undefined)
+            }))
+        })
     });
-    $("form").submit(function () {
-        var $this = $(this);
-        var formData = $this.serialize();
-        var method = $this.attr("method") || "GET";
-        var path = $this.attr("action") || window.location.pathname;
-        $.ajax({
-            method:method,
-            url:path,
-            data:formData,
-            success:function(){
-                window.location.reload();
-            }
-        });
-        return false;
-    }).find(".delete").click(function(){
-        var $this = $(this).closest("form");
-        var method = "DELETE";
-        var path = $this.attr("action") || window.location.pathname;
-        $.ajax({
-            method:method,
-            url:path,
-            success:function(){
-                window.location.reload();
-            }
-        });
-        return false;
+
+    $.getJSON("/feises/", function (ret) {
+        feises = ret;
+        feisesList();
     })
-})
+});

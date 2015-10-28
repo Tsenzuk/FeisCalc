@@ -25,10 +25,6 @@ router.get('/', function (req, res, next) {
         res.locals.title = "Users list";
         next();
     });
-    
-    /*res.locals.data = req.app.get("locals").users;
-    res.locals.title = "Persons list";
-    next();*/
 }).post('/', function (req, res, next) {
     
     res.app.get("locals").db.users.set(req.body, function (err, data) {
@@ -46,56 +42,13 @@ router.get('/', function (req, res, next) {
         res.locals.id = data.id;
         next();
     });
-    
-    /*var user = new Person("Jane " + (new Date()).getTime());
-    user.update(req.body);
-    var id = req.app.get("locals").users.push(user);
-    res.locals.data = user;
-    res.locals.title = "Person " + id;
-    res.locals.id = id;
-    next();*/
-})/*.delete('/', function (req, res, next) {
-    req.app.get("locals").users.length = 0;
-    res.locals.data = req.app.get("locals").users;
-    res.locals.title = "Persons list";
-    next();
-})*/;
+});
 
 router.param('id', function (req, res, next, id) {
     res.locals.title = "Feis " + req.params.id;
     res.locals.id = id;
     delete res.locals.model;
     next();
-    
-    /*var errors = {
-        "404": {
-            message: "User with id '" + id + "' not found",
-            error: {}
-        }
-    }
-    res.locals.title = "Person " + id;
-    res.locals.id = id;
-    delete res.locals.model;
-    if (isNaN(id)) {
-        req.app.get("locals").users.forEach(function (user, index, array) {
-            if (user.name == id) {
-                res.locals.user = req.app.get("locals").users[index];
-                next();
-                return true;
-            } else if (index == (array.length - 1)) {
-                res.status(404).render("error", errors["404"]);
-            }
-        })
-    } else if (id) {
-        if (req.app.get("locals").users[id]) {
-            res.locals.user = req.app.get("locals").users[id];
-            next();
-        } else {
-            res.status(404).render("error", errors["404"]);
-        }
-    } else {
-        res.status(404).render("error", errors["404"]);
-    }*/
 });
 
 /* GET one fies page. */
@@ -126,8 +79,6 @@ router.get('/:id', function (req, res, next) {
         req.body.id = res.locals.id;
         next();
     });
-    /*res.locals.data = res.locals.user;
-    next();*/
 }).put('/:id', function (req, res, next) {
     res.app.get("locals").db.users.set(req.body, res.locals.id, function (err, user) {
         if (err) {
@@ -144,9 +95,6 @@ router.get('/:id', function (req, res, next) {
         //res.locals.id = res.locals.id;
         next();
     });
-    /*res.locals.user.update(req.body);
-    res.locals.data = res.locals.user;
-    next();*/
 }).delete('/:id', function (req, res, next) {
     res.app.get("locals").db.users.del(res.locals.id, function (err) {
         if (err) {
@@ -167,10 +115,6 @@ router.get('/:id', function (req, res, next) {
         };
         next();
     })
-    /*req.app.get("locals").users[req.app.get("locals").users.indexOf(res.locals.user)] = undefined;
-    res.locals.data = req.app.get("locals").users;
-    res.locals.title = "Persons list";
-    next();*/
 });
 
 /* GET one fies page. */
