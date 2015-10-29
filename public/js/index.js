@@ -18,8 +18,14 @@ jQuery(function ($) {
         var feis = Roots.fesiList.find("option:selected").data("feis");
         $.getJSON("/feises/" + Roots.fesiList.val() + "/participants", function (ret) {
             feis.participants = ret;
-            leftPanel.find(".list-group").html("").append(feis.participants.map(function (p) {
-                return ((p) ? $("<li></li>").addClass("list-group-item").text(p.name + " " + p.lastName) : undefined)
+            leftPanel.find(".list-group").html("").append(feis.participants.map(function (p, index) {
+                return ((p) ? $("<li></li>")
+                    .addClass("list-group-item")
+                    .append(
+                        $("<a></a>")
+                        .attr("href", "/users/" + index + "/")
+                        .text(p.name + " " + p.lastName)
+                    ) : undefined)
             }))
         })
     });
@@ -27,5 +33,7 @@ jQuery(function ($) {
     $.getJSON("/feises/", function (ret) {
         feises = ret;
         feisesList();
-    })
+    });
+
+
 });
