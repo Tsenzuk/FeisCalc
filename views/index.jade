@@ -17,25 +17,44 @@ block content
                         a(href="#feises", aria-controls="feises", role="tab", data-toggle="tab") Feises
                     li(role="presentation")
                         a(href="#users", aria-controls="users", role="tab", data-toggle="tab") Users                        
-                form.navbar-form.navbar-left
-                    .form-group
-                        select#fc-feises.form-control
-                            option.default —
     .container-fluid.tab-content
         #feises.row.tab-pane.active(role="tabpanel")
             .col-md-4
                 .left-panel.panel.panel-default
                     .panel-heading Feis Participants
                     .panel-body
+                        form
+                            .form-group
+                                select#fc-feises.form-control
+                                    option.default —
+                        .btn-group
+                            button.btn.btn-default
+                                i.glyphicon.glyphicon-plus
+                                i.glyphicon.glyphicon-user
                     ul.list-group
+            .col-md-8
                 .main-panel.panel.panel-default
                     .panel-heading Feis settings
                     .panel-body
-                        form
+                        form#fc-feis-settings.form-horizontal(method="PUT")
+                            .form-group
+                                .col-sm-12
+                                    button.btn.btn-default(type="submit")
+                                        i.glyphicon.glyphicon-ok
+                                        span  Submit
         #users.row.tab-pane(role="tabpanel")
             .col-md-4
                 .left-panel.panel.panel-default
                     .panel-heading User
                     .panel-body
+                        .btn-group
+                            button.btn.btn-default
+                                i.glyphicon.glyphicon-plus
+                                i.glyphicon.glyphicon-user
                     ul.list-group
+            .col-md-8
+                .main-panel.panel.panel-default
+                    .panel-heading Feis settings
+                    .panel-body
+                        form#fc-user-settings.form-horizontal
                     
