@@ -139,7 +139,16 @@ router.use('/:id/participants', function (req, res, next) {
         next();
     })
 }).post('/:id/participants', function (req, res, next) {
-	res.app.get("locals").db.participants.set(res.locals.id, req.body.id, function (err, user) {
+    res.app.get("locals").db.participants.set(res.locals.id, req.body.id, function (err, user) {
+        if (err) {
+            res.locals.err = {
+                message: "Feis with id " + res.locals.id + " and participant with id " + req.body.id,
+                error: err,
+                code: 500
+            }
+            next();
+            return;
+        }
 		res.locals.data = user;
 		next();
 	});

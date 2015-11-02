@@ -5,7 +5,7 @@
  * @constructor
  */
 function Identity() {
-    return this;
+    //return this;
 }
 /**
  *

@@ -16,7 +16,7 @@ db.serialize(function () {
 	}
 });
 
-dbWrapper = {
+var dbWrapper = {
 	feises: {
 		/**
 		 * 
@@ -24,7 +24,7 @@ dbWrapper = {
 		 * @param {number}        id
 		 * @param {function}      [callback]
 		 */
-		set: function (obj, id, callback) {
+		set: function (obj, id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
 				callback = function () {};
@@ -119,7 +119,7 @@ dbWrapper = {
 		 * @param {number}        id
 		 * @param {function}      [callback]
 		 */
-		set: function (obj, id, callback) {
+		set: function (obj, id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
 				callback = function () {};
@@ -210,7 +210,7 @@ dbWrapper = {
 		 * @param {number}        id
 		 * @param {function}      [callback]
 		 */
-		set: function (feis_id, user_id, callback) {
+		set: function (feis_id, user_id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
 				callback = function () {};
@@ -221,7 +221,7 @@ dbWrapper = {
 				})
 				return;
 			}
-			db.run("INSERT OR REPLACE INTO Paticipants (feis_id, user_id) VALUES (?, ?)", [feis_id, user_id], function (err) {
+			db.run("INSERT OR REPLACE INTO Participants (feis_id, user_id) VALUES (?, ?)", [feis_id, user_id], function (err) {
 				if (err) {
 					callback(err);
 					return;

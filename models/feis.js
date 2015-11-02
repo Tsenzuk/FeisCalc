@@ -23,7 +23,7 @@ function Feis(name) {
     } else if (typeof name == "object") {
         this.update(name)
     }
-    return this;
+    //return this;
 }
 Feis.prototype = Object.create(Identity.prototype);
 Feis.prototype.constructor = Feis;

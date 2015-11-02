@@ -25,10 +25,15 @@ block content
                     .panel-body
                         form
                             .form-group
-                                select#fc-feises.form-control
-                                    option.default —
+                                .input-group
+                                    .input-group-btn
+                                        button#fc-feis-add-button.btn.btn-default(data-toggle="modal",data-target="#fc-feis-modal")
+                                            i.glyphicon.glyphicon-plus
+                                            i.glyphicon.glyphicon-calendar
+                                    select#fc-feises.form-control
+                                        option.default —
                         .btn-group
-                            button.btn.btn-default
+                            button#fc-participant-add-button.btn.btn-default(data-toggle="modal",data-target="#fc-participant-modal")
                                 i.glyphicon.glyphicon-plus
                                 i.glyphicon.glyphicon-user
                     ul.list-group
@@ -47,14 +52,71 @@ block content
                 .left-panel.panel.panel-default
                     .panel-heading User
                     .panel-body
-                        .btn-group
-                            button.btn.btn-default
-                                i.glyphicon.glyphicon-plus
-                                i.glyphicon.glyphicon-user
+                        form
+                            .form-group
+                                .input-group
+                                    .input-group-btn
+                                        button#fc-user-add-button.btn.btn-default(data-toggle="modal",data-target="#fc-user-modal")
+                                            i.glyphicon.glyphicon-plus
+                                            i.glyphicon.glyphicon-user
+                                    input#fc-user-search.form-control(type="search")
                     ul.list-group
             .col-md-8
                 .main-panel.panel.panel-default
                     .panel-heading Feis settings
                     .panel-body
                         form#fc-user-settings.form-horizontal
-                    
+    for modelObj, modelName in {user: {model: new userModel(), path:"/users/" }, feis: {model: new feisModel(), path: "/feises/"}}
+        .modal.fade(id="fc-#{modelName}-modal")
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        button.close(type="button", data-dismiss="modal", aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        h4.modal-title Add #{modelName}
+                    form.modal-body.form-horizontal(method="POST", action=modelObj.path)
+                        for objVal, objKey in modelObj.model                       
+                            case typeof objVal
+                                when "string"
+                                    .form-group
+                                        label.col-sm-2.control-label!= objKey
+                                        .col-sm-10
+                                            input.form-control(type="text", name!=objKey)
+                                when "boolean"
+                                    .form-group
+                                        .col-sm-10.col-sm-offset-2
+                                            .checkbox
+                                                label
+                                                    input(type="checkbox", name!=objKey)
+                                                    span!= " " + objKey
+                                when "number"
+                                    .form-group
+                                        label.col-sm-2.control-label!= objKey
+                                        .col-sm-10
+                                            input.form-control(type="number", name!=objKey)
+                                when "object"
+                                    if(objVal instanceof Date)
+                                        .form-group
+                                            label.col-sm-2.control-label!= objKey
+                                            .col-sm-10
+                                               input.form-control(type="date", name!=objKey)
+                        .form-group
+                            button(type="submit").btn.btn-success.col-sm-2.col-sm-offset-2
+                                i.glyphicon.glyphicon-ok
+                                span  OK
+                            button(data-dismiss="modal").btn.btn-danger.col-sm-2.col-sm-offset-1
+                                i.glyphicon.glyphicon-remove
+                                span  Cancel
+    #fc-participant-modal.modal.fade
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type="button", data-dismiss="modal", aria-label="Close")
+                        span(aria-hidden="true") &times;
+                    h4.modal-title Add participant
+                form.modal-body.form-horizontal(method="POST", action="./")
+                    .form-group
+                        .col-sm-12
+                            input.user-search.form-control(type="search")
+                            input(type="hidden", name="id")
+                    ul.list-group

@@ -28,9 +28,11 @@ block content
                                 input.form-control(type="text", name!=objKey)
                           when "boolean"
                             .form-group
-                                label.col-sm-2.control-label!= objKey
-                                .col-sm-10
-                                  input.form-control(type="checkbox", name!=objKey)
+                              .col-sm-10.col-sm-offset-2
+                                  .checkbox
+                                      label
+                                          input(type="checkbox", name!=objKey)
+                                          span!= " " + objKey
                           when "number"
                             .form-group
                                 label.col-sm-2.control-label!= objKey
@@ -74,9 +76,11 @@ block content
                                     input.form-control(type="text" value!=objVal, name!=objKey)
                               when "boolean"
                                 .form-group
-                                    label.col-sm-2.control-label!= objKey
-                                    .col-sm-10
-                                      input.form-control(type="checkbox" checked!=objVal, name!=objKey)
+                                  .col-sm-10.col-sm-offset-2
+                                      .checkbox
+                                          label
+                                              input(type="checkbox", name!=objKey, checked!=objVal)
+                                              span!= " " + objKey
                               when "number"
                                 .form-group
                                     label.col-sm-2.control-label!= objKey
@@ -111,9 +115,11 @@ block content
                         input.form-control(type="text" value!=objVal, name!=objKey)
                   when "boolean"
                     .form-group
-                        label.col-sm-2.control-label!= objKey
-                        .col-sm-10
-                          input.form-control(type="checkbox" checked!=objVal, name!=objKey)
+                      .col-sm-10.col-sm-offset-2
+                          .checkbox
+                              label
+                                  input(type="checkbox", name!=objKey, checked!=objVal)
+                                  span!= " " + objKey
                   when "number"
                     .form-group
                         label.col-sm-2.control-label!= objKey

@@ -36,7 +36,7 @@ function Person(name) {
         this.update(name)
     }
     
-    return this;
+    //return this;
 }
 Person.prototype = Object.create(Identity.prototype);
 Person.prototype.constructor = Person;
