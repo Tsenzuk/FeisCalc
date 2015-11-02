@@ -27,7 +27,7 @@ var dbWrapper = {
 		set: function (obj, id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(id)) {
 				id = undefined;
@@ -70,7 +70,7 @@ var dbWrapper = {
 		get: function (id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			var arr = [];
 			if (!id) {
@@ -105,7 +105,7 @@ var dbWrapper = {
 		del: function (id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(id)) {
 				db.run("DELETE FROM Feises WHERE name=?", id, callback);
@@ -124,7 +124,7 @@ var dbWrapper = {
 		set: function (obj, id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(id)) {
 				id = undefined;
@@ -165,7 +165,7 @@ var dbWrapper = {
 		get: function (id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			var arr = [];
 			if (!id) {
@@ -196,7 +196,7 @@ var dbWrapper = {
 		del: function (id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(id)) {
 				db.run("DELETE FROM Users WHERE lastName=?", id, callback);
@@ -215,7 +215,7 @@ var dbWrapper = {
 		set: function (feis_id, user_id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(feis_id) || isNaN(user_id)) {
 				callback({
@@ -240,7 +240,7 @@ var dbWrapper = {
 		get: function (feis_id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			var arr = [];
 			if (!feis_id) {
@@ -265,7 +265,11 @@ var dbWrapper = {
 					}
 					arr[data.id] = new Person(data);
 				}, function (err, rows) {
-					callback(err, arr);
+					callback(err, arr.sort(function (a, b) {
+						a = (a.date) ? a.date.getTime() : (new Date());
+						b = (b.date) ? b.date.getTime() : (new Date());
+						return b - a;
+					}));
 				});
 			}
 		},
@@ -277,7 +281,7 @@ var dbWrapper = {
 		del: function (participant_id) {
 			var callback = arguments[arguments.length - 1];
 			if (typeof callback != "function") {
-				callback = function () {};
+				callback = function () { };
 			}
 			if (isNaN(participant_id)) {
 				callback({

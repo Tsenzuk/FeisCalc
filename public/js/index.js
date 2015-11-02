@@ -117,9 +117,10 @@ window.jQuery(function ($) {
     }
 
     function showUser() {
-        var $this = $(this);
+        Roots.usersTab.find(".list-group").find(".list-group-item").removeClass("active");
+        var $this = $(this).addClass("active");
         var id = $this.data("id");
-        Roots.userSettings.attr("action", "/feises/" + id).fillForm(users[id]);
+        Roots.userSettings.attr("action", "/users/" + id).fillForm(users[id]);
     }
 
     function usersList() {
