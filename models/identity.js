@@ -20,7 +20,7 @@ Identity.prototype.update = function (obj) {
             } else if ((typeof that[key] == "boolean") && (obj[key] == "on")) {
                 that[key] = true;
             } else if (that[key] instanceof Date) {
-                that[key] = new Date(obj[key]);
+                that[key] = new Date(obj[key] || null);
             }
         }
     });

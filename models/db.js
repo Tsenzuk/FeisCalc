@@ -46,6 +46,8 @@ var dbWrapper = {
 					});
 				});
 			} else {
+				//console.log(obj);
+				obj = new Feis(obj);
 				db.run("INSERT OR REPLACE INTO Feises (" + keysArr.join(",") + ") VALUES (" + keysArr.map(function (k) {
 					return ("'" + obj[k] + "'") || "NULL"
 				}).join(",") + ")", function (err) {
