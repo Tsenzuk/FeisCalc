@@ -209,7 +209,7 @@ window.jQuery(function ($) {
 
                     }
                 })
-                )
+                ).btsListFilter(Roots.participantModal.find(".user-search"));
         Roots.participantModal.find("form").attr("action", "/feises/" + Roots.feisList.val() + "/participants")
     });
     Roots.feisList.change(function () {
@@ -245,7 +245,7 @@ window.jQuery(function ($) {
 
     $.getJSON("/users/", function (ret) {
         users = ret;
-        usersList().btsListFilter(Roots.userSearch, { itemChild: 'a' });;
+        usersList().btsListFilter(Roots.userSearch);
         //Roots.usersTab.find(".list-group")
     });
 });
