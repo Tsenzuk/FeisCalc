@@ -119,7 +119,7 @@ window.jQuery(function ($) {
     function showUser() {
         var $this = $(this);
         var id = $this.data("id");
-        Roots.userSettings.fillForm(users[id]);
+        Roots.userSettings.attr("action", "/feises/" + id).fillForm(users[id]);
     }
 
     function usersList() {
@@ -142,7 +142,7 @@ window.jQuery(function ($) {
     /**
     * Default behavior
     */
-    Roots.feisSettings.submit(function () {
+    /*Roots.feisSettings.submit(function () {
         var $this = $(this);
         var formData = $this.serialize();
         var method = $this.attr("method") || "GET";
@@ -156,38 +156,28 @@ window.jQuery(function ($) {
             }
         });
         return false;
-    });
-    Roots.feisModal.find("form").add(Roots.userModal.find("form")).on("submit", function () {
-        var $this = $(this);
-        var formData = $this.serialize();
-        var method = $this.attr("method") || "GET";
-        var path = $this.attr("action") || window.location.pathname;
-        $.ajax({
-            method: method,
-            url: path,
-            data: formData,
-            success: function () {
-                window.location.reload();
-            }
+    });*/
+    Roots.feisModal.find("form")
+        .add(Roots.userModal.find("form"))
+        .add(Roots.userSettings)
+        .add(Roots.feisSettings)
+        .add(Roots.participantModal.find("form"))
+        .on("submit", function () {
+            var $this = $(this);
+            var formData = $this.serialize();
+            var method = $this.attr("method") || "GET";
+            var path = $this.attr("action") || window.location.pathname;
+            $.ajax({
+                method: method,
+                url: path,
+                dataType: "json",
+                data: formData,
+                success: function () {
+                    window.location.reload();
+                }
+            });
+            return false;
         });
-        return false;
-    });
-    Roots.participantModal.find("form").on("submit", function () {
-        var $this = $(this);
-        var formData = $this.serialize();
-        var method = $this.attr("method") || "GET";
-        var path = $this.attr("action") || window.location.pathname;
-        $.ajax({
-            method: method,
-            url: path,
-            data: formData,
-            dataType: "json",
-            success: function () {
-                window.location.reload();
-            }
-        });
-        return false;
-    })
     Roots.participantModal.on("show.bs.modal", function () {
         Roots.participantModal
             .find(".list-group")
@@ -216,19 +206,20 @@ window.jQuery(function ($) {
         var leftPanel = $(".tab-pane.active").find(".left-panel");
         var feisId = Roots.feisList.val();
 
+        Roots.feisSettings.attr("action", "/feises/" + feisId);
+
         $.getJSON("/feises/" + feisId, function (ret) {
             feises[feisId] = $.extend(feises[feisId], ret);
-
             Roots.feisSettings.fillForm(feises[feisId])
         });
         $.getJSON("/feises/" + feisId + "/participants", function (ret) {
             feises[feisId].participants = ret;
             leftPanel.find(".list-group").html("").append(feises[feisId].participants.map(function (p, index) {
                 return ((p) ? $("<a></a>")
-                        .addClass("list-group-item")
-                        .attr("href", "/users/" + index + "/")
-                        .attr("target", "_blank")
-                        .text(p.name + " " + p.lastName)
+                    .addClass("list-group-item")
+                    .attr("href", "/users/" + index + "/")
+                    .attr("target", "_blank")
+                    .text(p.name + " " + p.lastName)
                     : undefined)
             }))
         });

@@ -65,7 +65,12 @@ block content
                 .main-panel.panel.panel-default
                     .panel-heading Feis settings
                     .panel-body
-                        form#fc-user-settings.form-horizontal
+                        form#fc-user-settings.form-horizontal(method="PUT")
+                            .form-group
+                                .col-sm-12
+                                    button.btn.btn-default(type="submit")
+                                        i.glyphicon.glyphicon-ok
+                                        span  Submit
     for modelObj, modelName in {user: {model: new userModel(), path:"/users/" }, feis: {model: new feisModel(), path: "/feises/"}}
         .modal.fade(id="fc-#{modelName}-modal")
             .modal-dialog
