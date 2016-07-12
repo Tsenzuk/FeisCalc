@@ -6,6 +6,10 @@ var sqlite3 = require('sqlite3').verbose();
 var fileDb = "../db/feises.db";
 
 var existsFileDb = fs.existsSync(fileDb);
+if(!existsFileDb) {
+  console.log("Creating DB file.");
+  fs.openSync(fileDb, "w");
+}
 var db = new sqlite3.Database(fileDb);
 
 db.serialize(function () {
