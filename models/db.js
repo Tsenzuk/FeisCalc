@@ -3,7 +3,7 @@ var Person = require('./user');
 
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
-var fileDb = "../db/feises.db";
+var fileDb = "./db/feises.db";
 
 var existsFileDb = fs.existsSync(fileDb);
 if(!existsFileDb) {
